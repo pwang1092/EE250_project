@@ -9,8 +9,8 @@ import grovepi
 sys.path.append('Software/Python/grove_rgb_lcd')
 import grove_rgb_lcd
 
-ultrasonic_port = 3
-light_sensor_port = 4
+# Grove ultrasonic sensor to digital port D4
+ultrasonic_port = 4
 
 # Connect the Grove Light Sensor to analog port A0
 light_sensor = 0
