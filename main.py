@@ -23,7 +23,7 @@ def getLightReading():
 	return grovepi.analogRead(light_sensor)
 
 def main():
-	while true:
+	while True:
 		print("Distance:", getDistance(), "Light:", getLightReading())
 		time.sleep(0.1)
 
