@@ -25,11 +25,15 @@ def getLightReading():
 
 def main():
 	url = "http://52.39.195.255//api/sensors"
-	obj = {"ultrasonic_reading": getDistance(), "light_level": getLightReading()}
 
 	while True:
+		distance = getDistance()
+		light = getLightReading()
+
+		obj = {"ultrasonic_reading": distance, "light_level": lights}
 		requests.post(url, json = obj)
-		print("Distance:", getDistance(), "Light:", getLightReading())
+		print("Distance:", distance, "Light:", light)
+		
 		time.sleep(0.1)
 
 
