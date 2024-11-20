@@ -30,10 +30,10 @@ def main():
 		distance = getDistance()
 		light = getLightReading()
 
-		obj = {"ultrasonic_reading": distance, "light_level": lights}
+		obj = {"ultrasonic_reading": distance, "light_level": light}
 		requests.post(url, json = obj)
 		print("Distance:", distance, "Light:", light)
-		
+
 		time.sleep(0.1)
 
 
