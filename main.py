@@ -1,6 +1,7 @@
 
 import sys
 import time
+import requests
 # By appending the folder of all the GrovePi libraries to the system path here,
 # we are successfully `import grovepi`
 sys.path.append('Software/Python/')
@@ -23,10 +24,20 @@ def getLightReading():
 	return grovepi.analogRead(light_sensor)
 
 def main():
+	url = "http://52.39.195.255//api/sensors"
+	obj = {"ultrasonic_reading": getDistance(), "light_level": getLightReading()}
+
 	while True:
+		requests.post(url, json = obj)
 		print("Distance:", getDistance(), "Light:", getLightReading())
 		time.sleep(0.1)
 
 
 if __name__ == "__main__":
 	main();
+
+
+#
+#curl -X POST \
+#     -H "Content-Type: application/json" \
+#     -d '{"sound_level": 75, "light_level": 150, "timestamp": "2024-11-19T15:42:00Z"}' \
