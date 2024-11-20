@@ -20,7 +20,7 @@ def getDistance():
 	return grovepi.ultrasonicRead(ultrasonic_port)
 
 def getLightReading():
-	return sensor_value = grovepi.analogRead(light_sensor)
+	return grovepi.analogRead(light_sensor)
 
 def main():
 	while true:
