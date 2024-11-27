@@ -7,12 +7,6 @@ app = Flask(__name__)
 sensor_data = []
 face_detection_data = []
 
-@app.route('/faces', methods=['POST'])
-def handle_face_detection():
-    data = request.get_json()
-    print(data)
-    return jsonify({'message': 'Face detection data received successfully'}), 201
-
 # POST endpoint to receive sound and light sensor data
 @app.route('/api/sensors', methods=['POST'])
 def handle_sensor_data():
@@ -33,7 +27,7 @@ def handle_sensor_data():
     return jsonify({'message': 'Sensor data received successfully'}), 201
 
 # POST endpoint to handle face detection flags
-@app.route('/api/face_detection', methods=['POST'])
+@app.route('/api/faces', methods=['POST'])
 def handle_face_detection():
     data = request.get_json()
     required_keys = ['face_detected', 'timestamp']
