@@ -24,7 +24,7 @@ def getLightReading():
 	return grovepi.analogRead(light_sensor)
 
 def main():
-	url = "http://52.39.195.255//api/sensors"
+	url = "http://52.38.44.83/api/sensors"
 
 	while True:
 		distance = getDistance()

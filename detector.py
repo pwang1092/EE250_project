@@ -148,7 +148,7 @@ def main():
     print(f"Camera resolution: {cap.get(cv2.CAP_PROP_FRAME_WIDTH)}x{cap.get(cv2.CAP_PROP_FRAME_HEIGHT)}")
     
     # Replace with your server URL
-    server_url = 'http://52.38.44.83:8000/api/faces'
+    server_url = 'http://52.38.44.83//api/faces'
     detector = FaceDetector(server_url, throttle_seconds=10)
     
     while True:
