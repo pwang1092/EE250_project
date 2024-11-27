@@ -2,7 +2,6 @@ from flask import Flask, request, jsonify
 from datetime import datetime
 
 app = Flask(__name__)
-CORS(app)
 
 # In-memory storage for simplicity
 sensor_data = []
