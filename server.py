@@ -3,9 +3,9 @@ from datetime import datetime
 
 app = Flask(__name__)
 
-# In-memory storage for simplicity
-sensor_data = []
-face_detection_data = []
+# In-memory storage for current state
+current_sensor_state = None
+current_face_state = None
 
 # POST endpoint to receive sound and light sensor data
 @app.route('/api/sensors', methods=['POST'])
@@ -21,10 +21,9 @@ def handle_sensor_data():
     if 'timestamp' not in data:
         data['timestamp'] = datetime.utcnow().isoformat()
 
-    # Store the data (for now, we'll just append it to the list)
-    if len(sensor_data) > 50:
-        sensor_data.pop(0)
-    sensor_data.append(data)
+    # Store the current state
+    global current_sensor_state
+    current_sensor_state = data
 
     return jsonify({'message': 'Sensor data received successfully'}), 201
 
@@ -42,22 +41,21 @@ def handle_face_detection():
     if 'timestamp' not in data:
         data['timestamp'] = datetime.utcnow().isoformat()
 
-    # Store the face detection flag
-    if len(face_detection_data) > 50:
-        face_detection_data.pop(0)
-    face_detection_data.append(data)
+    # Store the current state
+    global current_face_state
+    current_face_state = data
 
     return jsonify({'message': 'Face detection flag received successfully'}), 201
 
-# Endpoint to fetch all sensor data
+# Endpoint to fetch current sensor data
 @app.route('/api/sensors', methods=['GET'])
 def get_sensor_data():
-    return jsonify(sensor_data)
+    return jsonify(current_sensor_state)
 
-# Endpoint to fetch all face detection data
+# Endpoint to fetch current face detection data
 @app.route('/api/faces', methods=['GET'])
 def get_face_detection_data():
-    return jsonify(face_detection_data)
+    return jsonify(current_face_state)
 
 if __name__ == '__main__':
     app.run(debug=True)

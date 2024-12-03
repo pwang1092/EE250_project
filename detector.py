@@ -149,7 +149,7 @@ def main():
     
     # Replace with your server URL
     server_url = 'http://52.38.44.83//api/faces'
-    detector = FaceDetector(server_url, throttle_seconds=3)
+    detector = FaceDetector(server_url, throttle_seconds=5)
     
     while True:
         success, frame = cap.read()
