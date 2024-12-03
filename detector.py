@@ -92,7 +92,7 @@ class FaceDetector:
             
             # Send POST request with timeout
             response = requests.post(self.server_url, json=payload, timeout=2.0)
-            if response.status_code == 200:
+            if response.status_code == 201:
                 self.last_sent_time = datetime.now()
                 return True
             print(f"Server returned status code: {response.status_code}")
@@ -149,7 +149,7 @@ def main():
     
     # Replace with your server URL
     server_url = 'http://52.38.44.83//api/faces'
-    detector = FaceDetector(server_url, throttle_seconds=10)
+    detector = FaceDetector(server_url, throttle_seconds=3)
     
     while True:
         success, frame = cap.read()

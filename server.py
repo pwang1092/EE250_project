@@ -22,6 +22,8 @@ def handle_sensor_data():
         data['timestamp'] = datetime.utcnow().isoformat()
 
     # Store the data (for now, we'll just append it to the list)
+    if len(sensor_data) > 50:
+        sensor_data.pop(0)
     sensor_data.append(data)
 
     return jsonify({'message': 'Sensor data received successfully'}), 201
@@ -41,6 +43,8 @@ def handle_face_detection():
         data['timestamp'] = datetime.utcnow().isoformat()
 
     # Store the face detection flag
+    if len(face_detection_data) > 50:
+        face_detection_data.pop(0)
     face_detection_data.append(data)
 
     return jsonify({'message': 'Face detection flag received successfully'}), 201
@@ -51,7 +55,7 @@ def get_sensor_data():
     return jsonify(sensor_data)
 
 # Endpoint to fetch all face detection data
-@app.route('/api/face_detection', methods=['GET'])
+@app.route('/api/faces', methods=['GET'])
 def get_face_detection_data():
     return jsonify(face_detection_data)
 
