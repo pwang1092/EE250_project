@@ -37,13 +37,14 @@ function App({
           setIntruderDetected(isIntruder);
         }
 
-        // Get latest face detection data only if faces are detected with high confidence
-        if (facesData && facesData.faces && facesData.faces[0].confidence > 0.7) {
+        // Check if we have valid face data with high confidence
+        const hasFaceWithHighConfidence = 
+          facesData?.faces?.[0]?.confidence > 0.7;
+
+        if (hasFaceWithHighConfidence) {
           setFaceData(facesData);
-          console.log(facesData);
         } else {
-          setFaceData(null); // Clear face data if no faces detected
-          console.log("No faces detected");
+          setFaceData(null);
         }
 
       } catch (err) {
@@ -51,10 +52,14 @@ function App({
       }
     };
 
-    // Poll the server at regular intervals
     const interval = setInterval(fetchData, pollInterval);
     return () => clearInterval(interval);
   }, [ultrasonicThreshold, lightThreshold, pollInterval]);
+
+  // Helper function to check for valid face detection
+  const hasFaceDetected = () => {
+    return faceData?.faces?.[0]?.confidence > 0.7;
+  };
 
   if (error) {
     return <div className="error">Error: {error}</div>;
@@ -72,14 +77,15 @@ function App({
         )}
 
         <div className="dashboard-content">
-          {faceData && faceData.faces && faceData.faces[0].confidence > 0.7 ? (
+          {hasFaceDetected() ? (
             <div className="camera-feed">
-              <h2>Camera Feed</h2>
               <div className="image-container">
-                <img 
-                  src={`data:image/jpeg;base64,${faceData.image}`}
-                  alt="Camera feed"
-                />
+                {faceData?.image && (
+                  <img 
+                    src={`data:image/jpeg;base64,${faceData.image}`}
+                    alt="Camera feed"
+                  />
+                )}
                 <div className="face-detected">Face Detected!</div>
               </div>
               <div className="timestamp">

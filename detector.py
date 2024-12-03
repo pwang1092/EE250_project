@@ -149,7 +149,7 @@ def main():
     
     # Replace with your server URL
     server_url = 'http://52.38.44.83//api/faces'
-    detector = FaceDetector(server_url, throttle_seconds=5)
+    detector = FaceDetector(server_url, throttle_seconds=3)
     
     while True:
         success, frame = cap.read()
@@ -177,21 +177,20 @@ def main():
         put_text(processed_frame, f"Faces detected: {len(faces_data)}", (10, y_position))
         
         # If faces detected, try to send to server
-        if faces_data:
-            if detector.should_send_request():
-                success = detector.send_to_server(faces_data)
-                if success:
-                    put_text(processed_frame, "Sent to server!", (10, y_position + 30))
-                else:
-                    put_text(processed_frame, "Failed to send", (10, y_position + 30))
+        if detector.should_send_request():
+            success = detector.send_to_server(processed_frame, faces_data)
+            if success:
+                put_text(processed_frame, "Sent to server!", (10, y_position + 30))
             else:
-                # Show countdown timer
-                time_diff = datetime.now() - detector.last_sent_time if detector.last_sent_time else None
-                if time_diff:
-                    seconds_left = max(0, detector.throttle_seconds - time_diff.total_seconds())
-                    put_text(processed_frame, f'Next send in: {seconds_left:.1f}s', 
-                           (10, y_position + 30))
-        
+                put_text(processed_frame, "Failed to send", (10, y_position + 30))
+        else:
+            # Show countdown timer
+            time_diff = datetime.now() - detector.last_sent_time if detector.last_sent_time else None
+            if time_diff:
+                seconds_left = max(0, detector.throttle_seconds - time_diff.total_seconds())
+                put_text(processed_frame, f'Next send in: {seconds_left:.1f}s', 
+                        (10, y_position + 30))
+
         # Display the frame
         cv2.imshow('Face Detection', processed_frame)
         

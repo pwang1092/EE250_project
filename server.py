@@ -31,7 +31,7 @@ def handle_sensor_data():
 @app.route('/api/faces', methods=['POST'])
 def handle_face_detection():
     data = request.get_json()
-    required_keys = ['faces', 'timestamp']
+    required_keys = ['faces', 'image', 'timestamp']
 
     # Check if the required keys exist in the posted data
     if not all(key in data for key in required_keys):
