@@ -14,6 +14,7 @@ function App({
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // Fetch both sensor and face detection data
         const response = await fetch('http://52.38.44.83/api/sensors');
         const facesResponse = await fetch('http://52.38.44.83/api/faces');
         
@@ -24,7 +25,7 @@ function App({
         const data = await response.json();
         const facesData = await facesResponse.json();
         
-        // Update sensor data if available
+        // Get latest readings if there are any
         if (data) {
           setSensorData(data);
           
@@ -36,11 +37,13 @@ function App({
           setIntruderDetected(isIntruder);
         }
 
-        // Update face data if faces are detected
-        if (facesData && facesData.faces && facesData.faces.length > 0) {
+        // Get latest face detection data only if faces are detected with high confidence
+        if (facesData && facesData.faces && facesData.faces[0].confidence > 0.7) {
           setFaceData(facesData);
+          console.log(facesData);
         } else {
-          setFaceData(null);
+          setFaceData(null); // Clear face data if no faces detected
+          console.log("No faces detected");
         }
 
       } catch (err) {
@@ -48,6 +51,7 @@ function App({
       }
     };
 
+    // Poll the server at regular intervals
     const interval = setInterval(fetchData, pollInterval);
     return () => clearInterval(interval);
   }, [ultrasonicThreshold, lightThreshold, pollInterval]);
@@ -68,7 +72,7 @@ function App({
         )}
 
         <div className="dashboard-content">
-          {faceData && faceData.faces && faceData.faces.length > 0 ? (
+          {faceData && faceData.faces && faceData.faces[0].confidence > 0.7 ? (
             <div className="camera-feed">
               <h2>Camera Feed</h2>
               <div className="image-container">
@@ -88,7 +92,6 @@ function App({
               <div>No faces detected</div>
             </div>
           )}
-
 
           {sensorData && (
             <div className="sensor-data">

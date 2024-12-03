@@ -179,7 +179,7 @@ def main():
         # If faces detected, try to send to server
         if faces_data:
             if detector.should_send_request():
-                success = detector.send_to_server(processed_frame, faces_data)
+                success = detector.send_to_server(faces_data)
                 if success:
                     put_text(processed_frame, "Sent to server!", (10, y_position + 30))
                 else:
