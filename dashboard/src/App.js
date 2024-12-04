@@ -14,7 +14,6 @@ function App({
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch both sensor and face detection data
         const response = await fetch('http://52.38.44.83/api/sensors');
         const facesResponse = await fetch('http://52.38.44.83/api/faces');
         
@@ -24,20 +23,7 @@ function App({
         
         const data = await response.json();
         const facesData = await facesResponse.json();
-        
-        // Get latest readings if there are any
-        if (data) {
-          setSensorData(data);
-          
-          // Check for intruder conditions
-          const isIntruder = 
-            data.ultrasonic_reading < ultrasonicThreshold || 
-            data.light_level > lightThreshold;
-            
-          setIntruderDetected(isIntruder);
-        }
 
-        // Check if we have valid face data with high confidence
         const hasFaceWithHighConfidence = 
           facesData?.faces?.[0]?.confidence > 0.7;
 
@@ -45,6 +31,15 @@ function App({
           setFaceData(facesData);
         } else {
           setFaceData(null);
+        }
+        
+        if (data) {
+          setSensorData(data);
+          const isIntruder = 
+            data.ultrasonic_reading < ultrasonicThreshold && 
+            data.light_level < lightThreshold && 
+            hasFaceWithHighConfidence;
+          setIntruderDetected(isIntruder);
         }
 
       } catch (err) {

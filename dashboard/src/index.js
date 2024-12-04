@@ -7,7 +7,7 @@ import reportWebVitals from './reportWebVitals';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App ultrasonicThreshold={50} lightThreshold={700} pollInterval={2000} />
+    <App ultrasonicThreshold={50} lightThreshold={500} pollInterval={2000} />
   </React.StrictMode>
 );
 

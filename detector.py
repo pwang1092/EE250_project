@@ -7,14 +7,6 @@ from datetime import datetime
 
 class FaceDetector:
     def __init__(self, server_url, min_detection_confidence=0.5, throttle_seconds=10):
-        """
-        Initialize the face detector
-        
-        Args:
-            server_url (str): URL to send the face detection results
-            min_detection_confidence (float): Minimum confidence threshold for detections
-            throttle_seconds (int): Minimum seconds between server requests
-        """
         self.server_url = server_url
         self.mp_face_detection = mp.solutions.face_detection
         self.mp_draw = mp.solutions.drawing_utils
@@ -25,7 +17,6 @@ class FaceDetector:
         self.throttle_seconds = throttle_seconds
 
     def should_send_request(self):
-        """Check if enough time has passed since the last request"""
         if self.last_sent_time is None:
             return True
             
@@ -33,7 +24,6 @@ class FaceDetector:
         return time_diff.total_seconds() >= self.throttle_seconds
 
     def process_frame(self, frame):
-        """Process a single frame and detect faces"""
         # Convert BGR to RGB
         rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         
@@ -74,7 +64,6 @@ class FaceDetector:
         return frame, faces_data
 
     def send_to_server(self, frame, faces_data):
-        """Send detection results to server if throttle time has passed"""
         if not self.should_send_request():
             return False
             
@@ -109,7 +98,6 @@ class FaceDetector:
             return False
 
 def list_available_cameras():
-    """List all available camera indices and their resolutions"""
     available_cameras = []
     for i in range(3):
         cap = cv2.VideoCapture(i)
@@ -159,11 +147,8 @@ def main():
             cap = cv2.VideoCapture(camera_index)
             continue
             
-        # Process frame and detect faces
         processed_frame, faces_data = detector.process_frame(frame)
         
-        # Add status text with better visibility
-        # White text with black outline for better readability
         def put_text(img, text, position, size=0.7):
             font = cv2.FONT_HERSHEY_SIMPLEX
             thickness = 2
@@ -172,11 +157,9 @@ def main():
             # White text
             cv2.putText(img, text, position, font, size, (255, 255, 255), thickness)
 
-        # Add status messages
         y_position = 30
         put_text(processed_frame, f"Faces detected: {len(faces_data)}", (10, y_position))
         
-        # If faces detected, try to send to server
         if detector.should_send_request():
             success = detector.send_to_server(processed_frame, faces_data)
             if success:
@@ -191,10 +174,8 @@ def main():
                 put_text(processed_frame, f'Next send in: {seconds_left:.1f}s', 
                         (10, y_position + 30))
 
-        # Display the frame
         cv2.imshow('Face Detection', processed_frame)
         
-        # Break loop on 'q' press
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
     
